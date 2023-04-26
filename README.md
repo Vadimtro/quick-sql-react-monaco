@@ -1,2 +1,2 @@
-# quick-sql-react-monaco
+# ebx-mjml-vtl-editor
 Created with CodeSandbox
