@@ -1,38 +1,30 @@
 {
+  "name": "quick-sql-react-monaco",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "main": "src/index.js",
+  "dependencies": {
+    "@monaco-editor/react": "^4.5.0",
+    "file-saver": "^2.0.5",
+    "quick-ddl": "^0.0.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "^5.0.1"
+  },
+  "devDependencies": {
+    "typescript": "3.8.3"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
   "browserslist": [
     ">0.2%",
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ],
-  "dependencies": {
-    "@monaco-editor/react": "^4.5.0",
-    "file-saver": "^2.0.5",
-    "mjml-browser": "^4.14.1",
-    "monaco-editor": "^0.37.1",
-    "pretty": "^2.0.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-scripts": "^5.0.1",
-    "velocityjs": "^2.0.6"
-  },
-  "description": "Echobox MJML-VTL Editor",
-  "devDependencies": {
-    "@babel/runtime": "^7.21.0",
-    "gh-pages": "^5.0.0",
-    "typescript": "^4.8.4"
-  },
-  "homepage": "https://AndyNeale.github.io/ebx-mjml-vtl-editor",
-  "keywords": [],
-  "main": "src/index.js",
-  "name": "ebx-mjml-vtl-editor",
-  "scripts": {
-    "build": "react-scripts build",
-    "deploy": "gh-pages -d build",
-    "eject": "react-scripts eject",
-    "predeploy": "yarn run build",
-    "start": "react-scripts start",
-    "test": "react-scripts test --env=jsdom"
-  },
-  "version": "1.0.0"
+  ]
 }

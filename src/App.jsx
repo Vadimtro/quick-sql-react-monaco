@@ -1,72 +1,27 @@
 import React, { useEffect, useRef, useState } from "react";
 import Editor from "@monaco-editor/react";
-import mjml2html from "mjml-browser";
 import FileSaver from "file-saver";
-import Velocity from "velocityjs";
 
 import Data from "./Data";
 import Export from "./Export";
-import Preview from "./Preview";
 import Settings from "./Settings";
 
-import useDebounce from "./useDebounce";
+//import useDebounce from "./useDebounce";
 
 import { EXAMPLE_DATA } from "./data/example";
 
 import "./styles.css";
 
-const EXPORT_TYPE = {
-  ENCODED: "ENCODED",
-  NOT_ENCODED: "NOT ENCODED",
-};
 
 function App() {
   const [rawContent, setRawContent] = useState(null);
-  const debouncedContent = useDebounce(rawContent, 500);
+  //const debouncedContent = useDebounce(rawContent, 500);
   const [renderedContent, setRenderedContent] = useState(null);
   const [editionData, setEditionData] = useState("");
   const [campaignFilename, setCampaignFilename] = useState("template");
   const [renderMJML, setRenderMJML] = useState(true);
   const [renderVTL, setRenderVTL] = useState(true);
-
-  useEffect(() => {
-    if (debouncedContent) {
-      let output = debouncedContent;
-      if (renderVTL) {
-        try {
-          output = Velocity.render(output, {
-            ...editionData,
-            ebx: {
-              isCustomBlock: (string) => string.includes("@@@"),
-              getBlockType: (string) =>
-                string
-                  .replaceAll("@@@", "")
-                  .replace("urn:newsletter:block:", ""),
-            },
-            json: {
-              parse: (string) => new Map(Object.entries(JSON.parse(string))),
-            },
-          });
-        } catch (error) {
-          console.log("VTL rendering error", error);
-        }
-      } else {
-        //
-      }
-      if (renderMJML) {
-        try {
-          output = mjml2html(output).html;
-        } catch (error) {
-          console.log("MJML rendering error", error);
-          return;
-        }
-      } else {
-        //
-      }
-      setRenderedContent(output);
-    }
-  }, [debouncedContent, editionData, renderMJML, renderVTL]);
-
+ 
   const editorRef = useRef(null);
 
   const onDataChange = (data) => {
@@ -118,36 +73,60 @@ function App() {
   const onCampaignFilenameChange = (event) =>
     setCampaignFilename(event.target.value);
 
-  const handleUseExampleJSON = () => {
-    const json = JSON.stringify(EXAMPLE_DATA, null, 4);
-    document.getElementById("dataTextarea").value = json;
-    onDataChange(json);
-  };
+
+  const example = `
+departments /insert 2
+  name
+  location vc255
+  country vc255
+  employees /insert 4
+     name
+     email
+     job vc255
+     hiredate
+     skills /insert 6
+         skill vc255 /values C++, Java, APEX, JSON, Javascript, Python, CSS
+         proficiency num /check 1, 2, 3, 4, 5 [with 1 being a novice and 5 being a guru]
+       
+# "schema" : null
+# "semantics" : "char"     
+# "DV" : false     `;
+
+
+  function updateOutput() {
+    var model=monaco.editor.getModels()[1];
+    model.setValue("???");
+  }
 
   return (
     <>
       <div className="d-flex">
         <div className="editor-container">
-          <div className="section-titles">Editor</div>
+          <div className="section-titles">QSQL</div>
           <Editor
             className="editor"
             defaultLanguage="html"
-            defaultValue=""
+            defaultValue={example}
             onChange={onEditorChange}
-            onMount={onEditorMount}
           />
         </div>
-        <div className="preview-container">
-          <Preview html={renderedContent} />
+        <div className="editor-container">
+          <div className="section-titles">DDL</div>
+          <Editor 
+            className="editor"
+            defaultLanguage="sql"
+            defaultValue="select 1 from dual"
+            onMount={onEditorMount}
+          />
         </div>
       </div>
       <div className="d-flex">
         <div className="section-titles d-flex align-items-center">Data</div>
-        <button onClick={handleUseExampleJSON} className="m-0 p-0">
-          Use Example JSON - 10/05/22
+        <button onClick={updateOutput} className="m-0 p-0">
+          Translate to SQL
         </button>
       </div>
-      <Data
+      {/*<Data
         data={JSON.stringify(editionData, null, 2)}
         onChange={(event) => onDataChange(event.target.value)}
       />
@@ -162,7 +141,7 @@ function App() {
         setRenderMJML={setRenderMJML}
         renderVTL={renderVTL}
         setRenderVTL={setRenderVTL}
-      />
+  /   >*/}
     </>
   );
 }
