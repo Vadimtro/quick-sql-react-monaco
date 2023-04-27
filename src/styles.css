@@ -54,14 +54,14 @@ code {
   padding: 10px;
 }
 
-.data {
+/*.data {
   border: 1px solid #333;
   width: calc(100% - 32px);
   min-height: 10vh;
   margin: 0px 5px 5px 5px;
   padding: 10px;
   resize: vertical;
-}
+}*/
 
 .html {
   font-size: 80%;

@@ -2,47 +2,20 @@ import React, { useEffect, useRef, useState } from "react";
 import Editor from "@monaco-editor/react";
 import FileSaver from "file-saver";
 
-import Data from "./Data";
 import Export from "./Export";
 import Settings from "./Settings";
 
-//import useDebounce from "./useDebounce";
-
-import { EXAMPLE_DATA } from "./data/example";
-
 import "./styles.css";
+
+import {QsqlLang, parse_errors} from "./QsqlLang"
+
+const qsql= require('quick-ddl');
 
 
 function App() {
-  const [rawContent, setRawContent] = useState(null);
-  //const debouncedContent = useDebounce(rawContent, 500);
-  const [renderedContent, setRenderedContent] = useState(null);
-  const [editionData, setEditionData] = useState("");
-  const [campaignFilename, setCampaignFilename] = useState("template");
-  const [renderMJML, setRenderMJML] = useState(true);
-  const [renderVTL, setRenderVTL] = useState(true);
- 
-  const editorRef = useRef(null);
+  //QsqlLang();
 
-  const onDataChange = (data) => {
-    try {
-      const json = JSON.parse(data);
-      setEditionData(json);
-    } catch (error) {
-      // console.log('DATA ERROR');
-      // console.log(error);
-    }
-  };
-
-  const onEditorChange = (value) => {
-    // console.log("onChange");
-    setRawContent(value);
-  };
-
-  const onEditorMount = (editor) => {
-    // console.log("onMount");
-    editorRef.current = editor;
-  };
+  //const editorRef = useRef(null);
 
   const onExport = (filename, fileType) => {
     if (!debouncedContent) {
@@ -73,18 +46,37 @@ function App() {
   const onCampaignFilenameChange = (event) =>
     setCampaignFilename(event.target.value);
 
+  const onEditorChange = (value) => {
+    const errors = parse_errors(value);
+    let markers = [];
+    for( var i = 0; i < errors.length; i++ ) {
+      markers.push({
+        startLineNumber: errors[i].from.line,
+        startColumn:     errors[i].from.ch,
+        endLineNumber:   errors[i].to.line,
+        endColumn:       errors[i].to.ch,
+        message:         errors[i].message,
+        severity: monaco.MarkerSeverity.Error
+      });
+    }
+    const model0=monaco.editor.getModels()[0];
+    monaco.editor.setModelMarkers(model0, "owner", markers);
+    //console.log("onChange");
+    //console.log(value);
+  };
+
 
   const example = `
 departments /insert 2
-  name
-  location vc255
-  country vc255
-  employees /insert 4
-     name
-     email
-     job vc255
-     hiredate
-     skills /insert 6
+   name
+   location vc255
+   country vc255
+   employees /insert 4
+      name
+      email
+      job vc255
+      hiredate
+      skills /insert 6
          skill vc255 /values C++, Java, APEX, JSON, Javascript, Python, CSS
          proficiency num /check 1, 2, 3, 4, 5 [with 1 being a novice and 5 being a guru]
        
@@ -94,8 +86,9 @@ departments /insert 2
 
 
   function updateOutput() {
-    var model=monaco.editor.getModels()[1];
-    model.setValue("???");
+    var model0=monaco.editor.getModels()[0];
+    var model1=monaco.editor.getModels()[1];
+    model1.setValue(qsql.ddl.translate(model0.getValue()));
   }
 
   return (
@@ -105,7 +98,7 @@ departments /insert 2
           <div className="section-titles">QSQL</div>
           <Editor
             className="editor"
-            defaultLanguage="html"
+            defaultLanguage="qsql"
             defaultValue={example}
             onChange={onEditorChange}
           />
@@ -116,12 +109,11 @@ departments /insert 2
             className="editor"
             defaultLanguage="sql"
             defaultValue="select 1 from dual"
-            onMount={onEditorMount}
+            //onMount={onEditorMount}
           />
         </div>
       </div>
       <div className="d-flex">
-        <div className="section-titles d-flex align-items-center">Data</div>
         <button onClick={updateOutput} className="m-0 p-0">
           Translate to SQL
         </button>
@@ -141,7 +133,7 @@ departments /insert 2
         setRenderMJML={setRenderMJML}
         renderVTL={renderVTL}
         setRenderVTL={setRenderVTL}
-  /   >*/}
+      />*/}
     </>
   );
 }
