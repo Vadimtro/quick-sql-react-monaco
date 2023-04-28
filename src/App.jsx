@@ -1,9 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
+//import React, { useEffect, useRef, useState } from "react";
 import Editor from "@monaco-editor/react";
-import FileSaver from "file-saver";
-
-import Export from "./Export";
-import Settings from "./Settings";
 
 import "./styles.css";
 
@@ -118,22 +114,6 @@ departments /insert 2
           Translate to SQL
         </button>
       </div>
-      {/*<Data
-        data={JSON.stringify(editionData, null, 2)}
-        onChange={(event) => onDataChange(event.target.value)}
-      />
-      <Export
-        filename={campaignFilename}
-        onChange={onCampaignFilenameChange}
-        onExport={() => onExport(campaignFilename, EXPORT_TYPE.CAMPAIGN)}
-        exportType="Template"
-      />
-      <Settings
-        renderMJML={renderMJML}
-        setRenderMJML={setRenderMJML}
-        renderVTL={renderVTL}
-        setRenderVTL={setRenderVTL}
-      />*/}
     </>
   );
 }

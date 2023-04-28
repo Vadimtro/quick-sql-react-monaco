@@ -129,10 +129,10 @@ function ref_error( lines ) {
                 if( tbl == null ) {
                     var pos = nodeUpperContent.indexOf(chunks[j]);
                     ret.push({
-                        from: {line:node.x, ch:pos,  },
-                        to: {line:node.x, ch:pos+chunks[j].length,  },
+                        from: {line:node.x+1, ch:pos+1,  },
+                        to: {line:node.x+1, ch:pos+chunks[j].length+1,  },
                         //severity: "error",
-                        message: "Undefined object"
+                        message: "Undefined object: "+chunks[j]
                     });
                 }
            }
@@ -158,10 +158,10 @@ function ref_error( lines ) {
                 if(  tbl == null ) {
                     var pos = lineUpperContent.indexOf(chunks[j]);
                     ret.push({
-                        from: {line:i, ch:pos,  },
-                        to: {line:i, ch:pos+chunks[j].length,  },
+                        from: {line:i+1, ch:pos+1,  },
+                        to: {line:i+1, ch:pos+chunks[j].length+1,  },
                         //severity: "error",
-                        message: "Undefined object"
+                        message: "Undefined object: "+chunks[j]
                     });                   
                     break;
                 }
